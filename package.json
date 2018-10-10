@@ -1,0 +1,15 @@
+{
+  "name": "blind-quantum-computing",
+  "version": "0.0.1",
+  "description": "Simulation of blind quantum computing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "quantum-circuit": "^0.9.32",
+    "socket.io": "^2.1.1"
+  }
+}
