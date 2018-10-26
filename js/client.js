@@ -55,7 +55,11 @@ function interact(gate, qubit) {
         }
     });
     var obj = circuit.save();
-    //send obj on socket
+    socket.emit('gate', {
+        'gate': gate,
+        'qubit': qubit,
+        'circuit': obj
+    });
 }
 
 //Take input of 1 gate from user and generate the list

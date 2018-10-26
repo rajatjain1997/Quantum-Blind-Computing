@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const mbqc = require('./mbqc_block');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -18,7 +19,14 @@ app.get('/', function(req, res){
   });
 
 io.on('connection', function(socket) {
-    console.log("Connection recieved");
+    socket.on('gate', function(gate) {
+        circuit = mbqc(gate.gate[0], gate.gate[1], gate.circuit);
+        circuit.run(["Need to supply", 0]);
+        socket.emit('measurement', {
+            c: circuit.getCregValue("c")
+        });
+        console.log(circuit.stateAsString(true));
+    });
 });
 
 http.listen(8000, function(){

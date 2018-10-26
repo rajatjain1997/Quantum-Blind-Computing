@@ -20,10 +20,12 @@ function get_mbqc_block(direction, angle, alpha) {
     return circuit;
 }
 
+module.exports = get_mbqc_block;
 
-circuit = get_mbqc_block("z", "pi/2");
 
-circuit.run([1, 0]);
+// circuit = get_mbqc_block("z", "pi/2");
 
-console.log(circuit.getCregValue("c"));
-console.log(circuit.stateAsString(true));
+// circuit.run([1, 0]);
+
+// console.log(circuit.getCregValue("c"));
+// console.log(circuit.stateAsString(true));
