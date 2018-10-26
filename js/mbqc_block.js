@@ -1,18 +1,20 @@
 var QuantumCircuit = require("quantum-circuit");
 
-function get_mbqc_block(direction, angle) {
+function get_mbqc_block(direction, angle, alpha) {
 
     var circuit = new QuantumCircuit(2);
 
     circuit.createCreg("c", 1);
+    circuit.registerGate("alpha", alpha);
 
-    circuit.addGate("cx", 0, [0, 1]);
-    circuit.addGate("r" + direction, 1, 0, {
+    circuit.addGate("cx", 1, [0, 1]);
+    circuit.addGate("alpha", 0, 1);
+    circuit.addGate("r" + direction, 2, 0, {
         params: {
             phi: angle
         }
     });
-    circuit.addGate("h", 2, 0);
+    circuit.addGate("h", 3, 0);
     circuit.addMeasure(0, "c", 0);
     circuit.save();
     return circuit;
