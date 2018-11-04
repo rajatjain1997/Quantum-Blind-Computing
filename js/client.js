@@ -22,7 +22,7 @@ function get_brickwork_block(gate) {
             break;
         case "cnot":
             identity_state[1][gate.control] = ["x", 2];
-            identity_state[2][math.abs(gate.control-1)] = ["z", 2];
+            identity_state[2][Math.abs(gate.control-1)] = ["z", 2];
             identity_state[3][gate.control] = ["x", 2];
             break;
     }
@@ -31,7 +31,7 @@ function get_brickwork_block(gate) {
 
 function interact(gate, qubit) {
     var r;
-    if(math.random()>=0.5) {
+    if(Math.random()>=0.5) {
         r = 1;
     } else {
         r = 0;
@@ -43,7 +43,7 @@ function interact(gate, qubit) {
         c = cx;
     }
     c= (c-1)*2 -1;
-    var alpha = [0, 1/4, 2, 3, 4, 5, 6, 7][math.floor(math.random()*8)];
+    var alpha = [0, 1/4, 2, 3, 4, 5, 6, 7][Math.floor(Math.random()*8)];
     var phase = c*gate[1] - alpha + r
     var theta = phase + "pi/4";
 
@@ -60,7 +60,22 @@ function interact(gate, qubit) {
         'qubit': qubit,
         'circuit': obj
     });
+
+    socket.on('measurement', function(c) {
+       if(gate[0] == "z") {
+           cz+=c;
+       } else {
+           cx+=c;
+       }
+       //interact with the next gate and determine whether to cnot
+    });
 }
+
+socket.emit('initialize', 2);
+
+socket.on('initialize-complete', function() {
+    interact(["z", 0], 1);
+});
 
 //Take input of 1 gate from user and generate the list
 //Keep this list as a global variable
