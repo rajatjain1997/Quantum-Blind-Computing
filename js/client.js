@@ -32,29 +32,35 @@ function get_brickwork_block(gate) {
 function interact(gate, qubit) {
     var r;
     if(Math.random()>=0.5) {
-        r = 1;
+        r = 4;
     } else {
         r = 0;
     }
     var c;
     if(gate[0]=="z") {
+        cz+=r/4;
         c = cz;
     } else {
+        cx+=r/4;
         c = cx;
     }
     c= (c-1)*2 -1;
-    var alpha = [0, 1/4, 2, 3, 4, 5, 6, 7][Math.floor(Math.random()*8)];
+    var alpha = [0, 1, 2, 3, 4, 5, 6, 7][Math.floor(Math.random()*8)];
+    r = 0; alpha = 0; c = 1;
     var phase = c*gate[1] - alpha + r
     var theta = phase + "pi/4";
-
+    gate[1] = theta;
     var circuit = new QuantumCircuit(1);
     circuit.addGate("h", 0, 0);
     circuit.addGate("rz", 1, 0, {
         params: {
-            phi: theta
+            phi: alpha
         }
     });
     var obj = circuit.save();
+    console.log('Theta: ' + theta);
+    console.log('Alpha: ' + alpha);
+    console.log('r: ' + r);
     socket.emit('gate', {
         'gate': gate,
         'qubit': qubit,
@@ -67,14 +73,24 @@ function interact(gate, qubit) {
        } else {
            cx+=c;
        }
+       if(true) {
+        socket.emit('terminate');
+       } else {
+        //    interact(gate2, qubit2);
+       }
        //interact with the next gate and determine whether to cnot
     });
 }
 
-socket.emit('initialize', 2);
+socket.emit('initialize', 1);
 
 socket.on('initialize-complete', function() {
-    interact(["z", 0], 1);
+    interact(["z", 0], 0);
+});
+
+socket.on('qubits', function(qubits) {
+    console.log(qubits);
+    //perform pauli correction
 });
 
 //Take input of 1 gate from user and generate the list

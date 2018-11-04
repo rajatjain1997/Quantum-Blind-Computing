@@ -22,6 +22,28 @@ app.get('/', function(req, res){
 
 var qubits = []
 
+function two_qubit_collapse(state, c) {
+    console.log(state);
+    var a, b;
+    if(c==0) {
+        a = state[0];
+        b = state[1]; 
+    } else {
+        a = state[2];
+        b = state[3];
+    }
+    mod_a = Math.pow(a.re, 2) + Math.pow(a.im, 2);
+    mod_b = Math.pow(b.re, 2) + Math.pow(b.im, 2);
+    console.log(mod_a);
+    norm = Math.sqrt(mod_a + mod_b);
+    console.log(norm);
+    new_state = [
+        math.complex(a.re/norm, a.im/norm),
+        math.complex(b.re/norm, b.im/norm)
+    ]
+    return new_state;
+}
+
 io.on('connection', function(socket) {
     socket.on('gate', function(gate) {
         console.log('here!');
@@ -33,12 +55,13 @@ io.on('connection', function(socket) {
             setstate: true
         });
         var c = circuit.getCregValue("c");
+        qubits[gate.qubit] = two_qubit_collapse(circuit.state, c);
         socket.emit('measurement', {
             'c': c
         });
         console.log(c);
         console.log(circuit.stateAsString(true));
-        // qubits[gate.qubit]
+        console.log(qubits);
     });
     socket.on('initialize', function(qubitcount) {
         for(var i = 0; i<qubitcount; i++) {

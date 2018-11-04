@@ -23,9 +23,9 @@ function get_mbqc_block(direction, angle, alpha) {
 module.exports = get_mbqc_block;
 
 
-circuit = get_mbqc_block("z", "pi/2");
+// circuit = get_mbqc_block("z", "pi/2");
 
-circuit.run([1, 0]);
+// circuit.run([1, 0]);
 
-console.log(circuit.getCregValue("c"));
-console.log(circuit.stateAsString(true));
+// console.log(circuit.getCregValue("c"));
+// console.log(circuit.stateAsString(true));
